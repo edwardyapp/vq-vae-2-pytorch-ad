@@ -58,7 +58,7 @@ It only uses a single GPU so you can use the [helper bash scripts](scripts/anoma
 
 ## Sample result
 
-![](bottle_0.png)
+![Sample result from anomaly detection](bottle_0.png)
 
 ## Contact
 
