@@ -71,13 +71,13 @@ class PixelTransform:
         return torch.from_numpy(ar).long()
 
 def save_checkpoint(model, args, object_name, epoch, is_best):
-    checkpoint_name = f'checkpoint/{object_name}/{object_name}_pixelsnail_{args.hier}_{str(epoch + 1).zfill(3)}.pt'
+    checkpoint_name = f'checkpoint/{object_name}_pixelsnail_{args.hier}_{str(epoch + 1).zfill(3)}.pt'
     torch.save(
         {'model': model.module.state_dict(), 'args': args},
         checkpoint_name,
     )
     if is_best:
-        best_checkpoint_name = f'checkpoint/{object_name}/{object_name}_pixelsnail_{args.hier}_best.pt'
+        best_checkpoint_name = f'checkpoint/{object_name}_pixelsnail_{args.hier}_best.pt'
         torch.save(
             {'model': model.module.state_dict(), 'args': args},
             best_checkpoint_name,
@@ -190,7 +190,7 @@ def main():
             save_checkpoint(model, args, object_name, i, is_best=False)
 
         if i > 0:
-            os.remove(f'checkpoint/{object_name}/{object_name}_pixelsnail_{args.hier}_{str(i).zfill(3)}.pt')
+            os.remove(f'checkpoint/{object_name}_pixelsnail_{args.hier}_{str(i).zfill(3)}.pt')
 
 if __name__ == '__main__':
     main()

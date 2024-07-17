@@ -66,7 +66,7 @@ anomalyScore = 'l2_RGB'
 # Options are "both", "topOnly" and "bottomOnly" that is to use both top and bottom priors or one or the other
 prior = "both"
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 # Function to plot and save the anomaly detection results
 def plot_fig(test_img, scores, gts, pixel_threshold, save_dir, class_name, img_threshold_optimal, img_scores, gt_list):

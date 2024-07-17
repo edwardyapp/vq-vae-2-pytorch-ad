@@ -5,7 +5,7 @@ def count_average_images(folder_paths):
     total_folders = 0
 
     for folder_path in folder_paths:
-        good_folder_path = os.path.join(folder_path, "test", "good")
+        good_folder_path = os.path.join(folder_path, "../test", "good")
         if os.path.exists(good_folder_path):
             num_images = len([name for name in os.listdir(good_folder_path) if os.path.isfile(os.path.join(good_folder_path, name))])
             total_images += num_images

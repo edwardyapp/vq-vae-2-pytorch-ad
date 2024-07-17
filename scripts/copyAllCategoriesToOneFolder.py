@@ -4,9 +4,12 @@ import shutil
 categories = ["bottle", "cable", "capsule", "hazelnut", "metal_nut", "pill", "screw", "toothbrush", "transistor",
               "zipper", "carpet", "grid", "leather", "tile", "wood"]
 
-source_base_path = "/home/sfmt/PycharmProjects/vq-vae-2-pytorch/MVTec/"
-destination_base_path = "/home/sfmt/PycharmProjects/vq-vae-2-pytorch/MVTec/all/train/good/"
+source_base_path = os.path.join("", "mvtec_anomaly_detection")
+destination_base_path = os.path.join("", "mvtec_anomaly_detection", "all", "train", "good")
 
+# Ensure the destination base path exists
+if not os.path.exists(destination_base_path):
+    os.makedirs(destination_base_path)
 
 def copy_with_new_names(source_folder, destination_folder):
     files = os.listdir(source_folder)

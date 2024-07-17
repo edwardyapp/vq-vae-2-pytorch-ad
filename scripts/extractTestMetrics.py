@@ -39,7 +39,7 @@ for metric in metrics:
     metric_dataframes[metric] = metric_df
 
 # Write the metric DataFrames to separate tabs in an Excel file
-excel_writer = pd.ExcelWriter("metrics.xlsx")
+excel_writer = pd.ExcelWriter("../metrics.xlsx")
 for metric, df in metric_dataframes.items():
     df.to_excel(excel_writer, sheet_name=metric)
 excel_writer.close()

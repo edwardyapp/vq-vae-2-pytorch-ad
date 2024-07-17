@@ -34,7 +34,7 @@ class MVTecDataset(Dataset):
 
         # set transforms
         self.transform_x = T.Compose([T.RandomRotation(degrees=(-randomRotation, randomRotation)),
-                                      T.Resize(resize, Image.ANTIALIAS),
+                                      T.Resize(resize, Image.LANCZOS),
                                       T.RandomCrop(randomCrop),
                                       T.CenterCrop(centerCrop),
                                       T.ToTensor(),

@@ -401,10 +401,10 @@ def main(args):
             if args.early_stopping and epochs_without_improvement >= args.patience:
                 break  # Stop training loop
 
-            previous_checkpoint_path = f"checkpoint/{class_name}/{class_name}_vqvae_{str(i).zfill(3)}.pt"
+            previous_checkpoint_path = f"checkpoint/{class_name}_vqvae_{str(i).zfill(3)}.pt"
             if os.path.exists(previous_checkpoint_path):
                 os.remove(previous_checkpoint_path)
-            torch.save(model.state_dict(), f"checkpoint/{class_name}/{class_name}_vqvae_{str(i + 1).zfill(3)}.pt")
+            torch.save(model.state_dict(), f"checkpoint/{class_name}_vqvae_{str(i + 1).zfill(3)}.pt")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

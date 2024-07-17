@@ -1,5 +1,6 @@
-# vq-vae-2-pytorch
-Implementation of Generating Diverse High-Fidelity Images with VQ-VAE-2 in PyTorch
+# vq-vae-2-pytorch-ad
+
+The code in this repository corresponds to our paper, Anomaly detection on MVTec AD using VQ-VAE-2, which has been accepted at the [57th CIRP Conference on Manufacturing Systems 2024](https://www.cirpcms2024.org/), 29th to 31st May 2024, Póvoa de Varzim, Portugal.
 
 ## Update
 
@@ -13,33 +14,54 @@ train_vqvae.py and vqvae.py now supports distributed training. You can use --n_g
 * PyTorch >= 1.1
 * lmdb (for storing extracted codes)
 
-[Checkpoint of VQ-VAE pretrained on FFHQ](vqvae_560.pt)
+[Checkpoint of VQ-VAE-2 and PixelSnail (top and bottom)](https://drive.google.com/drive/folders/1w4F1YWVz6hJwK3KvkrGZSgJKTXkZ1qkB?usp=drive_link)
 
 ## Usage
 
 Currently supports 256px (top/bottom hierarchical prior)
 
-1. Stage 1 (VQ-VAE)
+1. [Register](https://www.mvtec.com/company/research/datasets/mvtec-ad) and download the whole MVTec dataset; it's about 4.9 GB size so make sure you have enough space.
 
-> python train_vqvae.py [DATASET PATH]
+2. Run the following script from the home directory which combines all the images into one category and renames them:
+> python scripts/copyAllCategoriesToOneFolder.py 
 
-If you use FFHQ, I highly recommends to preprocess images. (resize and convert to jpeg)
+3. Stage 1 (VQ-VAE)
 
-2. Extract codes for stage 2 training
+> python train_vqvae.py mvtec_anomaly_detection/all/train --resize 292 --centerCrop 256 --randomCrop 282 --randomRotation 2 --epoch 1000 --n_gpu 4 --batch 512
 
-> python extract_code.py --ckpt checkpoint/[VQ-VAE CHECKPOINT] --name [LMDB NAME] [DATASET PATH]
+If you have access to more than 1 GPU, adjust the value accordingly; the more GPUs you have the larger the batch size can be which reduces the total training time.
 
-3. Stage 2 (PixelSNAIL)
+4. Extract codes for stage 2 training
 
-> python train_pixelsnail.py [LMDB NAME]
+> python extract_code.py --ckpt checkpoint/all_vqvae_1000.pt --name lmdb/all/ mvtec_anomaly_detection/all/train/ --gpu
 
-Maybe it is better to use larger PixelSNAIL model. Currently model size is reduced due to GPU constraints.
+where multiple GPUs were used in Step 3, use the gpu flag; if not, then the no-gpu flag.
 
-## Sample
+5. Stage 2 (PixelSNAIL)
 
-### Stage 1
+To train the top prior:
 
-Note: This is a training sample
+> python train_pixelsnail.py lmdb/all --epoch 500 --lr 1e-4 --hier top --batch 64 --channel 128 --n_res_channel 128
 
-![Sample from Stage 1 (VQ-VAE)](stage1_sample.png)
-# vq-vae-2-pytorch-ad
+and the bottom prior:
+
+> python train_pixelsnail.py lmdb/all --epoch 500 --lr 1e-4 --hier bottom --batch 64 --channel 512
+
+All the GPUs that are available will be used.
+
+6. Anomaly detection
+
+> python anomaly_detection.py --resize 292 --centerCrop 256 --randomCrop 282 --randomRotation 2 --batch 167 --top checkpoint/all_pixelsnail_top_500.pt --bottom checkpoint/all_pixelsnail_bottom_500.pt --vqvae checkpoint/all_vqvae_1000.pt --data_path mvtec_anomaly_detection --class_name [class_name] --gpu
+
+where [class_name] corresponds to the individual object and texture categories; the gpu flag has the same interpretation as in step 4. 
+It only uses a single GPU so you can use the [helper bash scripts](scripts/anomaly_detection_GPU0.sh) to run across multiple GPUs and cycle through each of the categories.
+
+## Sample result
+
+![](bottle_0.png)
+
+## Contact
+
+For any questions or issues, please feel free to open an issue in this repository or [contact us](edwardyapp01@gmail.com) directly.
+
+Thank you for your interest in our work!

@@ -5,7 +5,7 @@ def count_defect_folders_and_average_images(folder_paths):
     total_images_in_defect_folders = 0
 
     for folder_path in folder_paths:
-        test_folder_path = os.path.join(folder_path, "test")
+        test_folder_path = os.path.join(folder_path, "../test")
         if os.path.exists(test_folder_path):
             defect_folders = [name for name in os.listdir(test_folder_path) if os.path.isdir(os.path.join(test_folder_path, name)) and name != "good"]
             total_defect_folders += len(defect_folders)
